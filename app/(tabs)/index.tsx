@@ -25,11 +25,15 @@ export default function TabOneScreen() {
      * This listener is fired whenever a notification is received while the app is foregrounded
      */
     notififReceivedListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
+      Notifications.addNotificationReceivedListener(async (notification) => {
         console.log(
           'NOTIFICATION RECEIVED:',
           JSON.stringify(notification, null, 2)
         );
+
+        const count = await Notifications.getBadgeCountAsync();
+        console.log('COUNT:', count);
+        Notifications.setBadgeCountAsync(count + 1);
       });
 
     /**
@@ -43,6 +47,8 @@ export default function TabOneScreen() {
           JSON.stringify(response, null, 2)
         );
         alert(response.notification.request.content.data.data);
+        Notifications.dismissAllNotificationsAsync();
+        Notifications.setBadgeCountAsync(0);
       });
 
     return () => {
